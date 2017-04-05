@@ -98,8 +98,7 @@
 			},
 			"utils": {
 				"type": "sap.ui.model.json.JSONModel",
-				"dataSource": "utils",
-				"preload": true
+				"dataSource": "utils"
 			},
 			"supplier": {
 				"type": "sap.ui.model.json.JSONModel",
@@ -122,8 +121,7 @@
 					},
 					"useBatch": false
 				},
-				"dataSource": "ZVIP_PROJECT_SRV",
-				"preload": true
+				"dataSource": "ZVIP_PROJECT_SRV"
 			},
 			"oUserModel": {
 				"type": "sap.ui.model.odata.v2.ODataModel",
@@ -138,8 +136,7 @@
 					},
 					"useBatch": false
 				},
-				"dataSource": "ZVIP_USERMGMT_SRV",
-				"preload": true
+				"dataSource": "ZVIP_USERMGMT_SRV"
 			}
 		},
 		"resources": {
