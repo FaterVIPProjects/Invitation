@@ -15,22 +15,6 @@
 			"version": "0.0.0"
 		},
 		"dataSources": {
-			"control_tables_values": {
-				"uri": "model/control_tables_values.json",
-				"type": "JSON"
-			},
-			"utils": {
-				"uri": "model/utils.json",
-				"type": "JSON"
-			},
-			"supplier": {
-				"uri": "model/supplier.json",
-				"type": "JSON"
-			},
-			"participation": {
-				"uri": "model/participation.json",
-				"type": "JSON"
-			},
 			"ZVIP_PROJECT_SRV": {
 				"uri": "/sap/opu/odata/sap/ZVIP_PROJECT_SRV/",
 				"type": "OData",
@@ -88,7 +72,7 @@
 		"models": {
 			"ControlValues": {
 				"type": "sap.ui.model.json.JSONModel",
-				"dataSource": "control_tables_values"
+				"uri": "model/control_tables_values.json"
 			},
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
@@ -98,15 +82,15 @@
 			},
 			"utils": {
 				"type": "sap.ui.model.json.JSONModel",
-				"dataSource": "utils"
+				"uri": "model/utils.json"
 			},
 			"supplier": {
 				"type": "sap.ui.model.json.JSONModel",
-				"dataSource": "supplier"
+				"uri": "model/supplier.json"
 			},
 			"participation": {
 				"type": "sap.ui.model.json.JSONModel",
-				"dataSource": "participation"
+				"uri": "model/participation.json"
 			},
 			"oDataModel": {
 				"type": "sap.ui.model.odata.v2.ODataModel",
