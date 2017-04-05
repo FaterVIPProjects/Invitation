@@ -1,0 +1,372 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+	<WizardStep	id="GeneralDataStep"
+		nextStep="ContactInformationStep"
+		complete="onCompleteGeneralDataStep"
+		validated="false"
+		activate="checkValidationSecondStep"
+		title="{i18n>generalData}">
+		<f:SimpleForm layout="ResponsiveGridLayout"
+			id="idSimpleForm"
+			editable="true">
+			<f:content>
+				
+				<Label id="inviteAsLabel"
+					visible="false"
+					text="{i18n>inviteAs}" 
+					required="true"
+					class="alignRadioButton"/>
+				<RadioButtonGroup id="inviteAsRB"
+					visible="false"
+					select="checkValidationFirstStep" 
+					columns="2">
+					<RadioButton text="{i18n>oldSupplier}"
+						selected="{utils>/oldSupplierButtonSelected}"
+						id="oldSupplierButton"/>								
+					<RadioButton text="{i18n>newSupplier}"
+						selected="{utils>/newSupplierButtonSelected}"
+						id="newSupplierButton"/>
+				</RadioButtonGroup>					
+				
+				<Label text="{i18n>invitationType}"
+					required="true"/>
+				<RadioButtonGroup	id="surveyTypeButtonGroup" 
+					select="checkValidationSecondStep"
+					columns="4">
+					<RadioButton text="{i18n>preQualification}"
+						selected="{utils>/preQualificationButtonSelected}"
+						id="preQualificationButton"/>
+					<RadioButton text="{i18n>bothQualification}"
+						selected="{utils>/bothQualificationButtonSelected}"
+						id="bothQualificationButton"/>
+					<RadioButton text="{i18n>onlyCodification}"
+						selected="{utils>/onlyCodificationButtonSelected}"
+						id="onlyCodificationButton"/>
+					<RadioButton text="{i18n>onlyQualification}"
+						selected="{utils>/onlyQualificationButtonSelected}"
+						id="onlyQualificationButton"/>
+				</RadioButtonGroup>
+				
+				<Label text="{i18n>businessName}"
+					required="true"/>
+				<Input value="{participation>Name1}"
+					id="secondBusinessNameInput"
+					maxLength="70"
+					liveChange="checkValidationSecondStep">
+					<layoutData>
+						<l:GridData span="L4 M4 S4" />
+					</layoutData>										
+				</Input>
+				<Text textAlign="End" 
+					text="{i18n>supplierStatus}:"
+					class="fakeLabel">
+					<layoutData>
+						<l:GridData	span="L2 M2 S2" />
+					</layoutData>											
+				</Text>
+				<Input value="{
+							path: 'participation>Status',
+							formatter: '.formatter.supplierStatus'
+					}"
+					textAlign="Center"
+					enabled="false">
+					<layoutData>
+						<l:GridData	span="L2 M2 S2" />
+					</layoutData>											
+				</Input>
+				
+				<Label text="{i18n>vat}"
+					visible="{= ${utils>/NSButtonSelected} || ${utils>/freelanceButtonSelected}}"
+					required="true"
+					id="vatItLabel"/>
+				<Input value="{participation>VatIt}"
+					maxLength="11"
+					visible="{= ${utils>/NSButtonSelected} || ${utils>/freelanceButtonSelected}}"
+					id="secondVatItInput"
+					liveChange="checkValidationSecondStep">
+					<layoutData>
+						<l:GridData span="L4 M4 S4" />
+					</layoutData>										
+				</Input>				
+				<Text text="{i18n>SMOI}"
+					textAlign="End" 
+					visible="{= ${utils>/NSButtonSelected} || ${utils>/freelanceButtonSelected}}"
+					class="fakeLabel">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>		
+				</Text>
+				<CheckBox selected="{participation>/Supplier/PurchaseOrg/0/Smoi}"
+					visible="{= ${utils>/NSButtonSelected} || ${utils>/freelanceButtonSelected}}"
+					enabled="{= ${utils>/User/Role} !== 'COMMERCIAL_MANAGER'}">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>											
+				</CheckBox>		
+				
+<!--				<Text id="naturalPersonText"  
+					text="{i18n>naturalPerson}:"
+					class="fakeLabel required"
+					textAlign="End"
+					visible="{= ${utils>/freelanceButtonSelected}}">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>					
+				</Text>-->
+<!--				<CheckBox	visible="{= ${utils>/freelanceButtonSelected}}"
+					selected="{participation>Naturalperson}">
+					<layoutData>
+						<l:GridData span="L1 M1 S1" />
+					</layoutData>											
+				</CheckBox>	 -->
+
+				<Label text="{i18n>vatCEE}"
+					visible="{utils>/CEEButtonSelected}" 
+					required="true"
+					id="vatCeeLabel"/>
+				<Input visible="{utils>/CEEButtonSelected}" 
+					value="{participation>VatCee}"
+					maxLength="16"
+					id="secondVatCeeInput"
+					liveChange="checkValidationSecondStep">
+					<layoutData>
+						<l:GridData span="L4 M4 S4" />
+					</layoutData>										
+				</Input>
+				<Text text="{i18n>SMOI}"
+					textAlign="End" 
+					visible="{utils>/CEEButtonSelected}" 
+					class="fakeLabel">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>		
+				</Text>
+				<CheckBox selected="{participation>/Supplier/PurchaseOrg/SMOI}"
+					visible="{utils>/CEEButtonSelected}">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>											
+				</CheckBox>	
+				
+				<Label id="taxCodeLabel" 
+					text="{i18n>taxCode}" 
+					required="true"
+					visible="{utils>/freelanceButtonSelected}" />
+				<Input value="{participation>TaxCode}" 
+					id="taxCode"
+					visible="{utils>/freelanceButtonSelected}"
+					liveChange="checkValidationSecondStep"
+					maxLength="255">
+					<layoutData>
+						<l:GridData span="L4 M4 S4" />
+					</layoutData>										
+				</Input>	
+
+<!--				<Label id="birthCityLabel" 
+					required="true"
+					text="{i18n>birthCity}"
+					visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; !${utils>/preQualificationButtonSelected}}"/>
+				<Input id="birthCityInput" 
+					value="{participation>Whbirthcity}"
+					visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; !${utils>/preQualificationButtonSelected}}"
+					liveChange="checkValidationSecondStep"
+					maxLength="50">
+					<layoutData>
+						<l:GridData span="L8 M8 S8" />
+					</layoutData>
+				</Input>
+				
+				<Label id="jobLabel" 
+					required="true"
+					text="{i18n>job}"
+					visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; !${utils>/preQualificationButtonSelected}}"/>
+				<Input id="jobInput" 
+					value="{participation>Whjob}"
+					maxLength="30"
+					visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; !${utils>/preQualificationButtonSelected}}"
+					liveChange="checkValidationSecondStep">
+					<layoutData>
+						<l:GridData span="L4 M4 S4" />
+					</layoutData>
+				</Input>					
+				<Text id="birthDateText"
+					textAlign="End"
+					visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; !${utils>/preQualificationButtonSelected}}"
+					class="fakeLabel"
+					text="{i18n>birthDate}:">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>					
+				</Text>
+				<DatePicker id="birthDatePicker" 
+					visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; !${utils>/preQualificationButtonSelected}}"
+					dateValue="{participation>Whbirthdate}"
+					valueStateText="{i18n>valueStateTextBirthDate}"
+					change="checkValidationSecondStep"
+					textAlign="Center">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>		
+				</DatePicker>-->
+					
+<!--				<Label text="{i18n>streetNumber}" />
+				<Input value="{participation>Address}"
+					maxLength="100"
+					enabled="{utils>/newSupplierButtonSelected}">
+					<layoutData>
+						<l:GridData span="L4 M4 S4" />
+					</layoutData>		
+				</Input>
+				<Text text="{i18n>number}:"
+					textAlign="End"
+					class="fakeLabel">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>					
+				</Text>
+				<Input value="{participation>Addressnumber}"
+					maxLength="10"
+					enabled="{utils>/newSupplierButtonSelected}">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>
+				</Input>-->
+				
+				<Label text="{i18n>country}" 
+					required="true"/>
+				<Select forceSelection="false"
+					id="countrySelect"
+					change="onCountryChange"
+                    selectedKey="{participation>Country}"
+                    enabled="{= ${utils>/newSupplierButtonSelected} &amp;&amp; !${utils>/NSButtonSelected}}"
+					items="{
+						path: 'oDataModel>/CountrySet',
+						sorter: { path: 'Description' }
+					}">
+					<core:Item key="{oDataModel>Key}" text="{oDataModel>Description}" />
+					<layoutData>
+						<l:GridData span="L4 M4 S4" />
+					</layoutData>
+				</Select>
+				<Text text="{i18n>impersonateSupplier}"
+					textAlign="End" 
+					class="fakeLabel">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>		
+				</Text>
+				<CheckBox selected="{participation>/DoneByFater}"
+					enabled="{= ${utils>/User/Role} !== 'COMMERCIAL_MANAGER'}">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>											
+				</CheckBox>		
+				
+				<Label text="{i18n>SMOI}"
+					visible="{utils>/ECEEButtonSelected}"/>				
+				<CheckBox selected="{participation>/Supplier/PurchaseOrg/Smoi}"
+					visible="{utils>/ECEEButtonSelected}"
+					enabled="{= ${utils>/User/Role} !== 'COMMERCIAL_MANAGER'}">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>											
+				</CheckBox>		
+				
+<!--			<Text	class="fakeLabel" 
+					visible="{utils>/freelanceButtonSelected}"
+					id="provinceText"
+					text="{i18n>region}:" 
+					textAlign="End">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>									
+				</Text>
+				<Select forceSelection="false"
+					id="provinceSelect"
+					change="checkValidationSecondStep"
+					visible="{utils>/freelanceButtonSelected}"
+					enabled="{= ${utils>/newSupplierButtonSelected} &amp;&amp; ${participation>Country} === 'IT'}"
+                    selectedKey="{participation>Province}">
+					<core:Item key="{oDataModel>Key}" text="{oDataModel>Description}" />
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>
+				</Select>	-->
+<!--				<Text id="firstSexText"
+					text="{i18n>sex}:"
+					textAlign="End"
+					class="fakeLabel"
+					visible="{= ${utils>/freelanceButtonSelected} || ${utils>/preQualificationButtonSelected}}">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>					
+				</Text>	
+				<Select id="firstSelectSex" 
+					forceSelection = "false"
+					textAlign="Center" 
+					change="checkValidationSecondStep"
+					selectedKey="{participation>Whsex}"
+					visible="{= ${utils>/freelanceButtonSelected} || ${utils>/preQualificationButtonSelected}}">
+					<core:Item key="1" text="{i18n>male}" />
+					<core:Item key="2" text="{i18n>female}" />
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>							
+				</Select>-->				
+
+
+<!--				<Label text="{i18n>capLoc}" />				
+				<Input value="{participation>City}"
+					maxLength="35"
+					enabled="{utils>/newSupplierButtonSelected}">
+					<layoutData>
+						<l:GridData span="L4 M4 S4" />
+					</layoutData>											
+				</Input>
+				<Text text="{i18n>cap}:"
+					textAlign="End"
+					class="fakeLabel">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>					
+				</Text>
+				<Input value="{participation>PostCode}"
+					maxLength="10"
+					enabled="{utils>/newSupplierButtonSelected}">
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>		
+				</Input>-->
+				
+				
+<!--				<Label id="naturalPersonLabel" 
+					required="{= !${utils>/preQualificationButtonSelected}}"
+					text="{i18n>naturalPerson}" 
+					visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; ${utils>/onlyQualificationButtonSelected}}"/>				
+				<CheckBox	visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; ${utils>/onlyQualificationButtonSelected}}"
+					selected="{participation>Naturalperson}">
+					<layoutData>
+						<l:GridData span="L1 M1 S1" />
+					</layoutData>											
+				</CheckBox> 
+				<Label id="sexLabel"
+					required="{= !${utils>/preQualificationButtonSelected}}"
+					text="{i18n>sex}"
+					visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; !${utils>/preQualificationButtonSelected}}">
+				</Label>
+				<Select id="selectSex"
+					forceSelection = "false" 
+					change="checkValidationSecondStep"
+					selectedKey="{participation>Whsex}"
+					visible="{= ${utils>/freelanceButtonSelected} &amp;&amp; !${utils>/preQualificationButtonSelected}}">
+					<core:Item key="M" text="{i18n>male}" />
+					<core:Item key="F" text="{i18n>female}" />
+					<layoutData>
+						<l:GridData span="L2 M2 S2" />
+					</layoutData>							
+				</Select>	-->
+				
+			</f:content>
+		</f:SimpleForm>
+	</WizardStep>
+</core:FragmentDefinition>

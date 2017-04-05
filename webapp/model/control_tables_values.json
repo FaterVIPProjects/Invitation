@@ -1,0 +1,14 @@
+{
+	"ContactAreaIT": [
+		{ "Key": "commercial", "Description": "Commerciale" },
+		{ "Key": "tecnical", "Description": "Tecnico" },
+		{ "Key": "administration", "Description": "Amministrazione" },
+		{ "Key": "management", "Description": "Direzione" }
+	],
+	"ContactAreaEN": [
+		{ "Key": "commercial", "Description": "Commercial" },
+		{ "Key": "tecnical", "Description": "Tecnical" },
+		{ "Key": "administration", "Description": "Administration" },
+		{ "Key": "management", "Description": "Management" }
+	]
+}

@@ -1,0 +1,45 @@
+<mvc:View controllerName="org.fater.app.controller.App" 
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns:u="sap.uxap"
+	xmlns:l="sap.ui.layout"
+	xmlns="sap.m">
+	<App>
+		<pages>
+			<Page title="{i18n>pageTitle}">
+				<content>
+					
+					<Wizard id="invitationWizard"
+							finishButtonText="{i18n>sendInvitation}"
+							complete="completedHandler"
+							enableBranching="true">
+					
+						<core:Fragment fragmentName="org.fater.app.view.fragment.WizardSteps.FirstStep" type="XML" />					
+						
+						<core:Fragment fragmentName="org.fater.app.view.fragment.WizardSteps.SecondStep" type="XML" />	
+						
+						<core:Fragment fragmentName="org.fater.app.view.fragment.WizardSteps.ThirdStep" type="XML" />	
+				
+						<core:Fragment fragmentName="org.fater.app.view.fragment.WizardSteps.LastStep" type="XML" />
+						
+					</Wizard>
+				</content>
+				
+				<footer>
+					<Toolbar>
+						<ToolbarSpacer/>
+						<Button icon="sap-icon://upload" 
+							type="Emphasized" 
+							text="{i18n>loadDraft}"
+							press="handleLoadDraft"/> 						
+						<Button icon="sap-icon://download"
+							type="Emphasized"  
+							text="{i18n>saveDraft}"
+							press="handleSaveDraft"/>
+					</Toolbar>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

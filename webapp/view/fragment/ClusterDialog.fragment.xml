@@ -1,0 +1,21 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+	<SelectDialog 
+		title="{i18n>cluster}"
+		items="{
+		    path: 'oDataModel>/ClusterSet', 
+		    filters: [{
+		        path: 'ClusterId', 
+		        operator: 'NE',
+		        value1: '0'
+		    }]
+		}"
+		liveChange="onClusterHelpSearch"
+		confirm="onSelectCluster">
+			<ObjectListItem title="{oDataModel>Name}">
+				<attributes>
+					<ObjectAttribute text="{utils>description}" />
+				</attributes>				
+			</ObjectListItem>
+    </SelectDialog>
+</core:FragmentDefinition>

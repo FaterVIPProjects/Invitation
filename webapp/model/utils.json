@@ -1,0 +1,12 @@
+{
+	"NSButtonSelected": false,
+	"CEEButtonSelected": false,
+	"ECEEButtonSelected": false,
+	"freelanceButtonSelected": false,
+	"newSupplierButtonSelected" : true,
+	"oldSupplierButtonSelected" : false,
+	"preQualificationButtonSelected": false,
+	"onlyQualificationButtonSelected": false,
+	"bothQualificationButtonSelected": false,
+	"onlyCodificationButtonSelected": false
+}

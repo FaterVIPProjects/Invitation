@@ -1,0 +1,12 @@
+{
+    "black": "#000000",
+    "grey": "#999999",
+    "light-grey": "#cccccc",
+    "white": "#ffffff",
+    "near-black": "#030303",
+    "green": "#51a351",
+    "red": "#bd362f",
+    "blue": "#2f96b4",
+    "orange": "#f89406",
+    "default-container-opacity": "0.8"
+}

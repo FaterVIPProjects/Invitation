@@ -1,0 +1,117 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+	<WizardStep id="ClusterAssignmentStep"
+		validated="false"
+		activate="checkValidationCompleteStep"
+		title = "{i18n>clusterAssignment}">
+		<l:Grid>
+			<List id="clusterList">
+				<headerToolbar>
+					<Toolbar>
+						<Title text="{i18n>selectedCluster}"/>
+						<ToolbarSpacer />
+						<Button icon="sap-icon://add"
+							press="changeCluster"/>
+					</Toolbar>
+				</headerToolbar>
+				<items>
+					<StandardListItem	id="selectedClusterItem"	
+						infoState="Error"/>
+					<ObjectListItem id="approverItem"
+						class="approverListItem"
+						title="{i18n>approver}:"
+						number="{oUserModel>Address/Firstname} {oUserModel>Address/Lastname}"/>	
+				</items>
+				<layoutData>
+					<l:GridData indent="L1 M1 S1"
+						span="L4 M4 S4" />
+				</layoutData>
+			</List>
+			<f:SimpleForm backgroundDesign="Transparent"
+				layout="ResponsiveGridLayout"
+				editable="true">
+				<f:content>
+					<Label text="{i18n>society}">
+						<layoutData>
+							<l:GridData span="L4 M4 S4" 
+								linebreakL="true"
+								linebreakM="true"
+								linebreakS="true"/>
+						</layoutData>	
+					</Label>
+					<Select change="checkClusterSelected" 
+						id="companySelect" 
+						forceSelection="false"
+						selectedKey="{participation>/Bukrs}"
+						items="{oDataModel>ClusterCom}">
+						<core:Item key="{oDataModel>Bukrs}" text="{oDataModel>Butxt}" />
+						<layoutData>
+							<l:GridData	span="L6 M6 S6" />
+						</layoutData>											
+					</Select>
+					<Label text="{i18n>purchaseOrganization}">
+						<layoutData>
+							<l:GridData	span="L4 M4 S4" />
+						</layoutData>						
+					</Label>
+					<Select change="checkClusterSelected" 
+						id="purchaseOrgSelect" 
+						forceSelection="false"
+  						selectedKey="{participation>/Ekorg}"
+						items="{oDataModel>ClusterCom}">
+						<core:Item key="{oDataModel>Ekorg}" text="{oDataModel>Ekotx}" />
+						<layoutData>
+							<l:GridData	span="L6 M6 S6" />
+						</layoutData>											
+					</Select>
+					<Label text="{i18n>industrialSector}">
+						<layoutData>
+							<l:GridData span="L4 M4 S4" />
+						</layoutData>										
+					</Label>
+					<Select change="checkValidationCompleteStep" 
+						id="industrialSectorSelect" 
+						forceSelection="false"
+  						selectedKey="{participation>/Supplier/IndustrialSector}"
+						items="{oDataModel>/IndustrialSectorSet}">
+						<core:Item key="{oDataModel>Key}" text="{oDataModel>Description}" />
+						<layoutData>
+							<l:GridData	span="L6 M6 S6" />
+						</layoutData>											
+					</Select>
+				</f:content>
+				<f:layoutData>
+					<l:GridData span="L7 M7 S7" />
+				</f:layoutData>
+			</f:SimpleForm>
+			<f:SimpleForm backgroundDesign="Transparent"
+				layout="ResponsiveGridLayout"
+				editable="true">
+				<f:content>	
+					<Label text="{i18n>expirationDate}"
+						required="true"/>
+					<DatePicker id="expirationDatePicker" 
+						dateValue="{participation>/ExpireT}"
+						valueStateText="{i18n>valueStateTextExpirationDate}"
+						change="checkValidationCompleteStep"
+						textAlign="Center">
+						<layoutData>
+							<l:GridData span="L3 M3 S3" />
+						</layoutData>		
+					</DatePicker>
+					<Label text="{i18n>noteSupplier}"/>
+					<TextArea value="{participation>/Note}"
+						maxLength="255"
+						rows="5">
+						<layoutData>
+							<l:GridData	span="L9 M9 S9"/>
+						</layoutData>	
+					</TextArea>
+				</f:content>
+				<f:layoutData>
+					<l:GridData span="L12 M12 S12" />
+				</f:layoutData>
+			</f:SimpleForm>	
+		</l:Grid>
+	</WizardStep>
+</core:FragmentDefinition>

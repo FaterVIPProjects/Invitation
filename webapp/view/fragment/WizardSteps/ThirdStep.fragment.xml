@@ -1,0 +1,82 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+	<WizardStep	id="ContactInformationStep"
+		title="{i18n>contactInformation}"
+		validated="false"
+		activate="checkValidationThirdStep"
+		complete="onCompleteContactInformationStep"
+		nextStep="ClusterAssignmentStep">
+		<f:SimpleForm	layout="ResponsiveGridLayout"
+			editable="true">
+			<f:content>
+				<Label text="{i18n>title}"/>
+				<Input value="{participation>ContactTitle}">
+					<layoutData>
+						<l:GridData span="L8 M8 S8" />
+					</layoutData>			
+				</Input>
+				<Label text="{i18n>name}"
+					required="true"/>
+				<Input	valueStateText="{i18n>valueStateTextFirstname}"
+					maxLength="100"
+					value="{participation>ContactName}"
+					liveChange="checkValidationThirdStep"
+					id="firstnameInput"
+					type="Text">
+					<layoutData>
+						<l:GridData span="L8 M8 S8" />
+					</layoutData>			
+				</Input>
+				<Label text="{i18n>surname}"
+					required="true"/>
+				<Input id="surnameInput"
+					maxLength="100"
+					value="{participation>ContactSurname}"
+					valueStateText="{i18n>valueStateTextSurname}"
+					liveChange="checkValidationThirdStep"
+					type="Text">
+					<layoutData>
+						<l:GridData span="L8 M8 S8" />
+					</layoutData>			
+				</Input>
+				<Label text="{i18n>area}" />
+				<Select forceSelection="false"
+					id="contact_area"
+                    selectedKey="{participation>ContactArea}">
+					<core:Item key="{ControlValues>Key}" text="{ControlValues>Description}" />
+					<layoutData>
+						<l:GridData span="L8 M8 S8" />
+					</layoutData>
+				</Select>
+<!--				<Label text="{i18n>telNum}" />
+				<Input value="{participation>ContactTelNumber}"
+					maxLength="16"
+					type="Tel">
+					<layoutData>
+						<l:GridData span="L8 M8 S8" />
+					</layoutData>			
+				</Input>									
+				<Label text="{i18n>cellNum}" />
+				<Input value="{participation>ContactCellNumber}" 
+					maxLength="16"
+					type="Tel">
+					<layoutData>
+						<l:GridData span="L8 M8 S8" />
+					</layoutData>			
+				</Input>	-->								
+				<Label text="{i18n>email}"
+					required="true"/>
+				<Input id="emailInput"
+					maxLength="50"
+					valueStateText="{i18n>valueStateTextEmail}"
+					liveChange="checkValidationThirdStep"
+					type="Email"
+					value="{participation>ContactEmail}">
+					<layoutData>
+						<l:GridData span="L8 M8 S8" />
+					</layoutData>			
+				</Input>									
+			</f:content>
+		</f:SimpleForm>
+	</WizardStep>
+</core:FragmentDefinition>
