@@ -1,11 +1,11 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
-	"org/fater/app/model/models"
+	"org/fater/invitation/model/models"
 ], function(UIComponent, Device, models) {
 	"use strict";
 
-	return UIComponent.extend("org.fater.app.Component", {
+	return UIComponent.extend("org.fater.invitation.Component", {
 
 		manifestFirst: false,
 
@@ -26,7 +26,6 @@ sap.ui.define([
 
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
-		
 			this.parseUserInfo();
 			
 			this.getModel("oDataModel").setSizeLimit(1000);

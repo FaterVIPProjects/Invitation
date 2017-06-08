@@ -6,7 +6,7 @@ sap.ui.define([
 ], function (UIComponent, JSONModel, ResourceModel, Router) {
 	"use strict";
 
-	var oComponent = UIComponent.extend("org.fater.app.besolution.core.framework.Component", {
+	var oComponent = UIComponent.extend("org.fater.invitation.besolution.core.framework.Component", {
 
 		// Metadata must be defined by the subclass that extend framework Component
 

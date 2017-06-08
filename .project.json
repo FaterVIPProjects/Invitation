@@ -6,8 +6,8 @@
   "build": {
     "targetFolder": "dist",
     "sourceFolder": "webapp",
-    "buildRequired": true,
-    "lastBuildDateTime": "Thu, 24 Nov 2016 09:17:34 GMT"
+    "buildRequired": false,
+    "lastBuildDateTime": "Thu, 08 Jun 2017 09:02:54 GMT"
   },
   "generation": [
     {
@@ -41,7 +41,7 @@
     "blockPushLevel": "Error"
   },
   "deploy": {
-    "destination": "FaterPlayExtranet",
+    "destination": "ZVIP",
     "name": "Z_F_INVITATION"
   },
   "mockpreview": {
@@ -52,6 +52,12 @@
     "mockRequestsFilePath": ""
   },
   "hybrid": {
-    "backendDestination": "ZVIP"
+    "backendDestination": "ZVIP",
+    "FacadeConfig": {
+      "cordova-plugin-device-orientation": false,
+      "accelerometer": {},
+      "compass": {},
+      "bFacade": false
+    }
   }
 }

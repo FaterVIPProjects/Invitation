@@ -30,29 +30,37 @@
 				
 				<Label text="{i18n>invitationType}"
 					required="true"/>
+					
+				<!-- DB - FORZATURA SOLA CODIFICA (editable="false")-->	
 				<RadioButtonGroup	id="surveyTypeButtonGroup" 
 					select="checkValidationSecondStep"
 					columns="4">
 					<RadioButton text="{i18n>preQualification}"
 						selected="{utils>/preQualificationButtonSelected}"
-						id="preQualificationButton"/>
+						id="preQualificationButton"
+						editable="false"/>
 					<RadioButton text="{i18n>bothQualification}"
 						selected="{utils>/bothQualificationButtonSelected}"
-						id="bothQualificationButton"/>
+						id="bothQualificationButton"
+						editable="false"/>
 					<RadioButton text="{i18n>onlyCodification}"
 						selected="{utils>/onlyCodificationButtonSelected}"
 						id="onlyCodificationButton"/>
 					<RadioButton text="{i18n>onlyQualification}"
 						selected="{utils>/onlyQualificationButtonSelected}"
-						id="onlyQualificationButton"/>
+						id="onlyQualificationButton"
+						editable="false"/>
 				</RadioButtonGroup>
 				
 				<Label text="{i18n>businessName}"
 					required="true"/>
+				<!--  DB - FIX BUG #051  (PUNTO A) 
+				      NOTA: aggiunto l'attributo valueStateText -->
 				<Input value="{participation>Name1}"
 					id="secondBusinessNameInput"
 					maxLength="70"
-					liveChange="checkValidationSecondStep">
+					liveChange="checkValidationSecondStep"
+					valueStateText="{i18n>valueStateTextBusinessName}"> 
 					<layoutData>
 						<l:GridData span="L4 M4 S4" />
 					</layoutData>										
