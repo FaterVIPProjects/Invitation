@@ -84,6 +84,7 @@ sap.ui.define([
 						selectedCluster.push(this.getView().getModel("oDataModel").getProperty(sPath));*/
 			this.getView().getModel("participation").setProperty("/ClusterId", this.getView().getModel("oDataModel").getProperty(sPath +
 				"/ClusterId"));
+
 			this.getView().byId("selectedClusterItem").setTitle(this.getView().getModel("oDataModel").getProperty(sPath + "/Name"));
 			this.getView().byId("companySelect").bindElement({
 				path: sPathODataModel,
@@ -97,6 +98,7 @@ sap.ui.define([
 					expand: "ClusterCom"
 				}
 			});
+
 			this.checkClusterSelected();
 			this.checkValidationCompleteStep();
 		},
@@ -392,7 +394,7 @@ sap.ui.define([
 			utils.checkIVACEE(oVatCeeInput.getValue(), oSecondVatCeeInput, false);
 
 			// DB - FIX : 06/2017 - Fill Dropdown Area
-			var selectedKey = oView.byId("countrySelect").getSelectedKey();           
+			var selectedKey = oView.byId("countrySelect").getSelectedKey();
 			this._updateCountrySelectOptions(selectedKey);
 
 			//Validate or invalidate step based on check			
@@ -520,6 +522,10 @@ sap.ui.define([
 			var oSecondVatCeeInput = oView.byId("secondVatCeeInput");
 			utils.checkIVACEE(oSecondVatCeeInput.getValue(), oVatCeeInput, false);
 			checkVatCee = utils.checkIVACEE(oSecondVatCeeInput.getValue(), oSecondVatCeeInput, true);
+
+			// DB - FIX : 06/2017 - Fill Dropdown Area
+			var selectedKey = oView.byId("countrySelect").getSelectedKey();
+			this._updateCountrySelectOptions(selectedKey);
 
 			//Validate or invalidate step based on check			
 			if (checkBusinessName && checkRadioButtonsQualification && checkCountry) {
@@ -829,8 +835,10 @@ sap.ui.define([
 				var that = this;
 				var sPath = "/ClusterSet('" + cluster + "')";
 				var aFilters = [
-					new Filter("ClusterCom/Bukrs", sap.ui.model.FilterOperator.EQ, company),
-					new Filter("ClusterCom/Ekorg", sap.ui.model.FilterOperator.EQ, purchOrg)
+					///BEGIN DB - FIX BUG 06/2017: Filtro per Società e Org. Acquisti 
+					//new Filter("ClusterCom/Bukrs", sap.ui.model.FilterOperator.EQ, company),
+					//new Filter("ClusterCom/Ekorg", sap.ui.model.FilterOperator.EQ, purchOrg)
+					///END   DB - FIX BUG 06/2017: Filtro per Società e Org. Acquisti 
 				];
 				var mParameters = {
 					filters: aFilters,
@@ -838,8 +846,25 @@ sap.ui.define([
 						"$expand": "ClusterCom"
 					},
 					success: function(oRespOData) {
-						var resp = oRespOData.ClusterCom.results[0].Resp;
-						//	                	that.getView().byId("approverInput").bindElement("oUserModel>/UserSet('" + resp + "')");
+
+						//BEGIN DB - FIX BUG 06/2017: Filtro per Società e Org. Acquisti 
+						//var resp = oRespOData.ClusterCom.results[0].Resp;
+						var resp = '';
+						for (var i = 0; i < oRespOData.ClusterCom.results.length; i++) {
+							if ((oRespOData.ClusterCom.results[i].Bukrs === company) && (oRespOData.ClusterCom.results[i].Ekorg === purchOrg))
+								resp = oRespOData.ClusterCom.results[i].Resp;
+						}
+						if (!resp){
+							that.getView().byId("approverItem").setHighlight('Error');
+							that.getView().byId("approverItem").setNumberState('Error');
+							//that.getView().byId("approverItem").setNumber('Error');
+						}
+						else{
+							that.getView().byId("approverItem").setHighlight('None');
+							that.getView().byId("approverItem").setNumberState('None');
+						}
+						//END   DB - FIX BUG 06/2017: Filtro per Società e Org. Acquisti 
+
 						that.getView().byId("approverItem").bindElement("oUserModel>/UserSet('" + resp + "')");
 						that.getView().setBusy(false);
 					},
