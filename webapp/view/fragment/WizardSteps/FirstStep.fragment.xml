@@ -1,140 +1,77 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout"
-	xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
-	<WizardStep	activate="checkValidationFirstStep"
-		validated="false"
-		id="FirstStep"
-		nextStep="GeneralDataStep"
-		complete="onCompleteFirstStep"
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+	<WizardStep activate="checkValidationFirstStep" validated="false" id="FirstStep" nextStep="GeneralDataStep" complete="onCompleteFirstStep"
 		title="{i18n>supplierResearch}">
-		<f:SimpleForm
-			labelSpanL="2"
-			labelSpanM="2"
-			backgroundDesign="Transparent"
-			layout="ResponsiveGridLayout"
-			editable="true">
+		<f:SimpleForm labelSpanL="2" labelSpanM="2" backgroundDesign="Transparent" layout="ResponsiveGridLayout" editable="true">
 			<f:content>
-				<Label text="{i18n>supplierType}" 
-					required="true"
-					class="alignRadioButton"/>
-				<RadioButtonGroup id="supplierTypeButtonGroup"
-					select="checkValidationFirstStep"
-					columns="4">
-					<RadioButton text="{i18n>nationalSupplier}"
-						selected="{utils>/NSButtonSelected}"
-						id="NSButton"/>
-					<RadioButton text="{i18n>CEESupplier}"
-						selected="{utils>/CEEButtonSelected}"
-						id="CEESButton"/>
-					<RadioButton text="{i18n>extraCEESupplier}"
-						selected="{utils>/ECEEButtonSelected}"
-						id="ECEESButton"/>
-					<RadioButton text="{i18n>freelance}"
-						selected="{utils>/freelanceButtonSelected}"
-						id="freelanceButton"/>
-				</RadioButtonGroup>				
-				<Label text="{i18n>businessName}" 
-					required="true"/>
-				<Input id="businessNameInput"
-					suggest="handleSuggest"
-					showSuggestion="true"
-					suggestionItemSelected="onSuggestionBusinessNameSelected"
-					suggestionItems="{
-						path: 'oDataModel>/SupplierSet',
-						length: 10
-					}"
-					liveChange="checkValidationFirstStep"
-					valueStateText="{i18n>valueStateTextBusinessName}"
-					value="{participation>Name1}"
-					showValueHelp="true"
+				<Label text="{i18n>supplierType}" required="true" class="alignRadioButton"/>
+				<RadioButtonGroup id="supplierTypeButtonGroup" select="checkValidationFirstStep" columns="4">
+					<RadioButton text="{i18n>nationalSupplier}" selected="{utils>/NSButtonSelected}" id="NSButton"/>
+					<RadioButton text="{i18n>CEESupplier}" selected="{utils>/CEEButtonSelected}" id="CEESButton"/>
+					<RadioButton text="{i18n>extraCEESupplier}" selected="{utils>/ECEEButtonSelected}" id="ECEESButton"/>
+					<RadioButton text="{i18n>freelance}" selected="{utils>/freelanceButtonSelected}" id="freelanceButton"/>
+				</RadioButtonGroup>
+				<Label text="{i18n>businessName}" required="true"/>
+				<Input id="businessNameInput" suggest="handleSuggest" showSuggestion="true" suggestionItemSelected="onSuggestionBusinessNameSelected"
+					suggestionItems="{ path: 'oDataModel>/SupplierSet', length: 10 }" liveChange="checkValidationFirstStep"
+					valueStateText="{i18n>valueStateTextBusinessName}" value="{participation>Name1}" showValueHelp="true"
 					valueHelpRequest="handleBusinessNameHelp">
 					<suggestionItems>
 						<core:Item text="{oDataModel>Name1}" key="{oDataModel>Name1}"/>
 					</suggestionItems>
 					<layoutData>
-						<l:GridData span="L8 M8 S8" />
+						<l:GridData span="L8 M8 S8"/>
 					</layoutData>
 				</Input>
-				<Label text="{i18n>vat}"
-					visible="{= ${utils>/NSButtonSelected} || ${utils>/freelanceButtonSelected}}"/>
-				<Input id="vatItInput"
-					maxLength="11"
-					startSuggestion="1"
-					showSuggestion="true"
-					suggest="handleSuggest"
-					suggestionItemSelected="onSuggestionBusinessNameSelected"
-					suggestionItems="{
-						path: 'oDataModel>/SupplierSet',
-						length: 10
-					}" 
+				<Label text="{i18n>vat}" visible="{= ${utils>/NSButtonSelected} || ${utils>/freelanceButtonSelected}}"/>
+				<!--  DB - FIX BUG #052 : Controllo lunghezza partita IVA (aggiunta funzione checkValidationFirstStep on liveChange) -->
+				<Input id="vatItInput" maxLength="11" startSuggestion="1" showSuggestion="true" suggest="handleSuggest"
+					suggestionItemSelected="onSuggestionBusinessNameSelected" suggestionItems="{ path: 'oDataModel>/SupplierSet', length: 10 }"
+					liveChange="checkValidationFirstStep"
 					value="{participation>VatIt}"
 					visible="{= ${utils>/NSButtonSelected} || ${utils>/freelanceButtonSelected}}">
 					<suggestionItems>
 						<core:Item text="{oDataModel>VatIt}" key="{oDataModel>VatIt}"/>
-					</suggestionItems>										
+					</suggestionItems>
 					<layoutData>
-						<l:GridData span="L8 M8 S8" />
+						<l:GridData span="L8 M8 S8"/>
 					</layoutData>
 				</Input>
-				<Label text="{i18n>vatCEE}"
-					visible="{utils>/CEEButtonSelected}"/>
-				<Input id="vatCeeInput"	
-					value="{participation>VatCee}"
-					maxLength="16"
-					startSuggestion="1"
-					showSuggestion="true"		
-					suggest="handleSuggest"
-					visible="{utils>/CEEButtonSelected}"
-					suggestionItemSelected="onSuggestionBusinessNameSelected"
-					suggestionItems="{
-						path: 'oDataModel>/SupplierSet',
-						length: 10
-					}">
+				<Label text="{i18n>vatCEE}" visible="{utils>/CEEButtonSelected}"/>
+				<!--  DB - FIX BUG #057 : Controlli partita IVA CEE (aggiunta funzione checkValidationFirstStep on liveChange) -->
+				<Input id="vatCeeInput" 
+					liveChange="checkValidationFirstStep"
+					value="{participation>VatCee}" maxLength="16" startSuggestion="1" showSuggestion="true" suggest="handleSuggest"
+					visible="{utils>/CEEButtonSelected}" suggestionItemSelected="onSuggestionBusinessNameSelected"
+					suggestionItems="{ path: 'oDataModel>/SupplierSet', length: 10 }">
 					<suggestionItems>
 						<core:Item text="{oDataModel>VatCee}" key="{oDataModel>VatCee}"/>
-					</suggestionItems>	
+					</suggestionItems>
 					<layoutData>
-						<l:GridData span="L8 M8 S8" />
+						<l:GridData span="L8 M8 S8"/>
 					</layoutData>
-				</Input>									
-				<Label text="{i18n>taxCode}"
-					visible="{utils>/freelanceButtonSelected}"/>
-				<Input id="taxCodeInput"	
-					value="{participation>TaxCode}"
-					startSuggestion="1"
-					visible="{utils>/freelanceButtonSelected}"
-					showSuggestion="true"	
-					suggest="handleSuggest"					
-					suggestionItemSelected="onSuggestionBusinessNameSelected"
-					suggestionItems="{
-						path: 'oDataModel>/SupplierSet',
-						length: 10
-					}">
+				</Input>
+				<Label text="{i18n>taxCode}" visible="{utils>/freelanceButtonSelected}"/>
+				<Input id="taxCodeInput" value="{participation>TaxCode}" startSuggestion="1" visible="{utils>/freelanceButtonSelected}"
+					showSuggestion="true" suggest="handleSuggest" suggestionItemSelected="onSuggestionBusinessNameSelected"
+					suggestionItems="{ path: 'oDataModel>/SupplierSet', length: 10 }">
 					<suggestionItems>
 						<core:Item text="{oDataModel>TaxCode}" key="{oDataModel>TaxCode}"/>
-					</suggestionItems>	
+					</suggestionItems>
 					<layoutData>
-						<l:GridData span="L8 M8 S8" />
+						<l:GridData span="L8 M8 S8"/>
 					</layoutData>
 				</Input>
 				<Label text="{i18n>supplierCode}"/>
-				<Input id="supplierIdInput"
-					startSuggestion="1"
-					value="{participation>SupplierId}"
-					showSuggestion="true"
-					suggest="handleSuggest"					
-					suggestionItemSelected="onSuggestionBusinessNameSelected"
-					suggestionItems="{
-						path: 'oDataModel>/SupplierSet',
-						length: 10
-					}" >
+				<Input id="supplierIdInput" startSuggestion="1" value="{participation>SupplierId}" showSuggestion="true" suggest="handleSuggest"
+					suggestionItemSelected="onSuggestionBusinessNameSelected" suggestionItems="{ path: 'oDataModel>/SupplierSet', length: 10 }">
 					<suggestionItems>
 						<core:Item text="{oDataModel>SupplierId}"/>
-					</suggestionItems>											
+					</suggestionItems>
 					<layoutData>
-						<l:GridData span="L3 M3 S3" />
+						<l:GridData span="L3 M3 S3"/>
 					</layoutData>
-				</Input>		
+				</Input>
 			</f:content>
-		</f:SimpleForm>	
+		</f:SimpleForm>
 	</WizardStep>
 </core:FragmentDefinition>

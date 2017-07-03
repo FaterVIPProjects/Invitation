@@ -2,7 +2,7 @@
 	"_version": "1.1.0",
 	"sap.app": {
 		"_version": "1.1.0",
-		"id": "org.fater.app",
+		"id": "org.fater.invitation",
 		"type": "application",
 		"i18n": "i18n/i18n.properties",
 		"applicationVersion": {
@@ -49,19 +49,22 @@
 			"tablet": true,
 			"phone": true
 		},
-		"supportedThemes": ["sap_hcb", "sap_bluecrystal"]
+		"supportedThemes": [
+			"sap_hcb",
+			"sap_bluecrystal"
+		]
 	},
 	"sap.ui5": {
 		"_version": "1.1.0",
 		"rootView": {
-			"viewName": "org.fater.app.view.App",
+			"viewName": "org.fater.invitation.view.App",
 			"type": "XML"
 		},
 		"dependencies": {
 			"minUI5Version": "1.30.0",
 			"libs": {
-				"sap.ui.core": {},
 				"sap.m": {},
+				"sap.ui.core": {},
 				"sap.ui.layout": {}
 			}
 		},
@@ -77,7 +80,7 @@
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "org.fater.app.i18n.i18n"
+					"bundleName": "org.fater.invitation.i18n.i18n"
 				}
 			},
 			"utils": {
@@ -93,30 +96,28 @@
 				"uri": "model/participation.json"
 			},
 			"oDataModel": {
-				"type": "sap.ui.model.odata.v2.ODataModel",
+				"type": "sap.ui.model.odata.ODataModel",
 				"settings": {
 					"defaultOperationMode": "Server",
 					"defaultBindingMode": "OneTime",
 					"defaultCountMode": "None",
 					"headers": {
 						"X-Requested-With": "X",
-						"Content-Type": "application/json",
-						"sap-client": "209"
+						"Content-Type": "application/json"
 					},
 					"useBatch": false
 				},
 				"dataSource": "ZVIP_PROJECT_SRV"
 			},
 			"oUserModel": {
-				"type": "sap.ui.model.odata.v2.ODataModel",
+				"type": "sap.ui.model.odata.ODataModel",
 				"settings": {
 					"defaultOperationMode": "Server",
 					"defaultBindingMode": "OneTime",
 					"defaultCountMode": "None",
 					"headers": {
 						"X-Requested-With": "X",
-						"Content-Type": "application/json",
-						"sap-client": "209"
+						"Content-Type": "application/json"
 					},
 					"useBatch": false
 				},
@@ -124,9 +125,11 @@
 			}
 		},
 		"resources": {
-			"css": [{
-				"uri": "css/style.css"
-			}]
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
 		}
 	},
 	"sap.platform.abap": {
