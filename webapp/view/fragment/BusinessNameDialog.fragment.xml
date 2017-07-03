@@ -1,12 +1,14 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout"
-	xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
-	<SelectDialog 
-		title="{i18n>businessName}"
-		items="{oDataModel>/SupplierSet}"
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+	<SelectDialog
+		title="{i18n>businessName}" 
+		class="sapUiPopupWithPadding" 
 		search="onBusinessNameHelpSearch"
-		confirm="onSelectBusinessName"
+		confirm="onSelectBusinessName" 
+		liveChange="onLiveChangeBusinessName" 
 		cancel="onBusinessNameHelpClose">
-			<ObjectListItem title="{oDataModel>Name1}">
+		<!-- ObjectListItem a runtime (function handleBusinessNameHelp) -->
+<!--
+		<ObjectListItem title="{oDataModel>Name1}">
 				<attributes>
 					<ObjectAttribute text="{i18n>supplierCode}: {oDataModel>SupplierId}" 
 						visible="{= ${oDataModel>SupplierId} !== '' &amp;&amp; ${oDataModel>Lifnr} === ''}"/>	
@@ -22,5 +24,6 @@
 						visible="{= ${oDataModel>City} !== ''}"/>
 				</attributes>				
 			</ObjectListItem>
-    </SelectDialog>
+-->
+	</SelectDialog>
 </core:FragmentDefinition>

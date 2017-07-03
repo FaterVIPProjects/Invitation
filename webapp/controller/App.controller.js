@@ -77,7 +77,19 @@ sap.ui.define([
 		},
 
 		onSelectCluster: function(oEvent) {
-			var sPath = oEvent.getParameter("selectedItem").getBindingContextPath();
+
+			//BEGIN FIX DB - 03.07.2017
+			var sPath = "";
+			var typeEvent = typeof oEvent;
+			if (typeEvent === "object") {
+				//END   FIX DB - 03.07.2017	
+				sPath = oEvent.getParameter("selectedItem").getBindingContextPath();
+			} //BEGIN FIX DB - 03.07.2017	
+			else {
+				sPath = "/ClusterSet('" + oEvent + "')";
+			}
+			//  END   FIX DB - 03.07.2017	
+
 			var index = sPath.substr(sPath.lastIndexOf("/") + 1);
 			var sPathODataModel = "oDataModel>/" + index;
 			/*			var selectedCluster = [];
@@ -99,6 +111,9 @@ sap.ui.define([
 				}
 			});
 
+			//  FIX DB - 03.07.2017
+			//#TODO
+
 			this.checkClusterSelected();
 			this.checkValidationCompleteStep();
 		},
@@ -107,16 +122,87 @@ sap.ui.define([
 			this._dialog.close();
 		},
 
-		handleBusinessNameHelp: function() {
+		handleBusinessNameHelp: function(oEvent) {
 			var businessNameValue = this.getView().byId("businessNameInput").getValue();
+
+			// create value help dialog
+			/*	if (!this._dialog) {
+					this._dialog = sap.ui.xmlfragment("org.fater.invitation.view.fragment.BusinessNameDialog", this);
+					this.getView().addDependent(this._dialog);
+				}*/
+
+			//	if (!this._dialog) {
 			this._dialog = sap.ui.xmlfragment("org.fater.invitation.view.fragment.BusinessNameDialog", this);
 			this.getView().addDependent(this._dialog);
+
+			//FIX DB - 03.07.2017 - ObjectListItem a runtime
+			var objListItem = new sap.m.ObjectListItem({
+				title: "{oDataModel>Name1}",
+				attributes: [
+					new sap.m.ObjectAttribute({
+						text: "{i18n>supplierCode}: {oDataModel>SupplierId}}",
+						visible: "{= ${oDataModel>SupplierId} !== '' && ${oDataModel>Lifnr} === ''}"
+					}),
+					new sap.m.ObjectAttribute({
+						text: "{i18n>supplierCode}: {oDataModel>Lifnr}",
+						visible: "{= ${oDataModel>Lifnr} !== ''}"
+					}),
+					new sap.m.ObjectAttribute({
+						text: "{i18n>vat}: {oDataModel>VatIt}",
+						visible: "{= ${oDataModel>VatIt} !== ''}"
+					}),
+					new sap.m.ObjectAttribute({
+						text: "{i18n>vatCEE}: {oDataModel>VatCee}",
+						visible: "{= ${oDataModel>VatCee} !== ''}"
+					}),
+					new sap.m.ObjectAttribute({
+						text: "{i18n>taxCode}: {oDataModel>TaxCode}",
+						visible: "{= ${oDataModel>TaxCode} !== ''}"
+					}),
+					new sap.m.ObjectAttribute({
+						text: "{oDataModel>City} ({oDataModel>Country})",
+						visible: "{= ${oDataModel>City} !== ''}"
+					})
+				]
+			});
+
+			this._dialog.bindAggregation(
+				"items",
+				"oDataModel>/SupplierSet",
+				objListItem
+			);
+
+			//}
+			////////////////////////////////////////////////////////////////////////////////
+
 			this._dialog.open(businessNameValue);
-			if (businessNameValue.length !== 0) {
-				this._dialog.fireSearch({
-					"value": businessNameValue
-				});
+
+			//FIX DB - Elimino items proposti (perchè provenienti da SRM e non da ECC)
+			//	if (businessNameValue.length !== 0) {
+
+			/*			this._dialog._searchField._inputElement.defaultValue = businessNameValue;
+						this._dialog._searchField._inputElement.value = businessNameValue;*/
+
+			/*			this._dialog.fireSearch({
+							"value": businessNameValue
+						});*/
+
+			if (!businessNameValue) {
+
+				// Cancellazione ragione sociale prima e seconda schermata
+				this.getView().byId("businessNameInput").setValue("");
+				this.getView().byId("secondBusinessNameInput").setValue("");
+
+				// Cancellazione suggested items
+
 			}
+
+			var aFilters = [];
+			aFilters.push(new Filter("Name1", sap.ui.model.FilterOperator.StartsWith, businessNameValue));
+			aFilters.push(new Filter("SupplierId", sap.ui.model.FilterOperator.EQ, "XXXXXXXXXXXX"));
+			this._dialog.getBinding("items").filter(aFilters, sap.ui.model.FilterType.Application);
+
+			//	}
 		},
 
 		handleSuggest: function(oEvent) {
@@ -125,6 +211,7 @@ sap.ui.define([
 			var aFilters = [];
 			if (sTerm.length) {
 				this.getView().getModel("oDataModel").setCountSupported(false);
+
 				if (id.lastIndexOf("businessNameInput") !== -1) {
 					aFilters.push(new Filter("Name1", sap.ui.model.FilterOperator.Contains, sTerm));
 				}
@@ -137,9 +224,13 @@ sap.ui.define([
 				if (id.lastIndexOf("taxCodeInput") !== -1) {
 					aFilters.push(new Filter("TaxCode", sap.ui.model.FilterOperator.Contains, sTerm));
 				}
-				if (id.lastIndexOf("supplierIdInput") !== -1) {
-					aFilters.push(new Filter("SupplierId", sap.ui.model.FilterOperator.Contains, sTerm));
-				}
+				//if (id.lastIndexOf("supplierIdInput") !== -1) {
+				//	aFilters.push(new Filter("SupplierId", sap.ui.model.FilterOperator.Contains, sTerm));
+				//}
+
+				// FIX DB - 27/06/2017 - Indico che la chiamata sta avvenendo dall'Invitation
+				aFilters.push(new Filter("SupplierId", sap.ui.model.FilterOperator.EQ, "XXXXXXXXXXXX"));
+
 				oEvent.getSource().getBinding("suggestionItems").filter(aFilters);
 				this.getView().getModel("oDataModel").setCountSupported(true);
 			} else {
@@ -223,10 +314,16 @@ sap.ui.define([
 							}
 						}
 						oView.setBusy(false);
+
+						//Gestione ripresa da ECC (30.06.2017)
+						that.onSelectFromECC(true);
 					},
 					error: function(oError) {
 						jQuery.sap.log.info("Odata Error occured");
 						oView.setBusy(false);
+
+						//Gestione ripresa da ECC (30.06.2017)
+						that.onSelectFromECC(false);
 					}
 				};
 			oView.setBusy(true);
@@ -312,10 +409,17 @@ sap.ui.define([
 							}
 						}
 						oView.setBusy(false);
+
+						//Gestione ripresa da ECC (30.06.2017)
+						that.onSelectFromECC(true);
+
 					},
 					error: function(oError) {
 						jQuery.sap.log.info("Odata Error occured");
 						oView.setBusy(false);
+
+						//Gestione ripresa da ECC (30.06.2017)
+						that.onSelectFromECC(false);
 					}
 				};
 			oView.setBusy(true);
@@ -324,13 +428,26 @@ sap.ui.define([
 		},
 
 		onBusinessNameHelpSearch: function(oEvent) {
+
 			var sValue = oEvent.getParameter("value");
-			if (sValue.length === 0) {
+			//FIX DB - Elimino items proposti e rifaccio la ricerca 
+			//(perchè trattasi di fornitori provenienti da SRM e non da ECC)
+			/*if (sValue.length === 0) {
 				return;
+			}*/
+			// FIX DB - 27/06/2017 - Indico che la chiamata sta avvenendo dall'Invitation
+			//var oFilter = new Filter("Name1", sap.ui.model.FilterOperator.StartsWith, sValue);
+			//var oBinding = oEvent.getSource().getBinding("items");
+			//oBinding.filter([oFilter]);
+			if (!sValue) {
+				this.getView().byId("businessNameInput").setValue("");
+				this.getView().byId("secondBusinessNameInput").setValue("");
 			}
-			var oFilter = new Filter("Name1", sap.ui.model.FilterOperator.StartsWith, sValue);
-			var oBinding = oEvent.getSource().getBinding("items");
-			oBinding.filter([oFilter]);
+
+			var aFilters = [];
+			aFilters.push(new Filter("Name1", sap.ui.model.FilterOperator.StartsWith, sValue));
+			aFilters.push(new Filter("SupplierId", sap.ui.model.FilterOperator.EQ, "XXXXXXXXXXXX"));
+			oEvent.getSource().getBinding("items").filter(aFilters, sap.ui.model.FilterType.Application);
 		},
 
 		onClusterHelpSearch: function(oEvent) {
@@ -371,6 +488,9 @@ sap.ui.define([
 
 				participationModel.setProperty("/Supplier/SupplierId", "");
 				participationModel.setProperty("/Supplier/Status", "");
+
+				//Gestione ripresa da ECC (30.06.2017) - Riapro in input il campo
+				that.onSelectFromECC(false);
 
 			}
 
@@ -585,6 +705,12 @@ sap.ui.define([
 						that.changeTextNextButton();
 					}, 0);
 				}
+
+				// BEGIN FIX DB - 03.07.2017
+				//that.checkClusterSelected();
+				//				alert("QUI");
+				// END   FIX DB - 03.07.2017
+
 				return true;
 			} else {
 				this._thirdStepValidationFlag = false;
@@ -601,6 +727,13 @@ sap.ui.define([
 			var isCompanySelected = participationModel.getProperty("/Bukrs") !== "" ? true : false;
 			var isPurchaseOrgSelected = participationModel.getProperty("/Ekorg") !== "" ? true : false;
 			var checkExpirationDate = this.checkExpirationDate();
+
+			//BEGIN DB - FIX BUG 06/2017: Impedire invio se approvatore non definito
+			//var oUserModel = this.getView().getModel("oUserModel");
+			//var isApproverDefined = oUserModel.getProperty("/User"); // !== "" ? true : false;
+			//console.log("Approver: " + isApproverDefined);
+			//END   DB - FIX BUG 06/2017: Impedire invio se approvatore non definito 
+
 			var that = this;
 
 			//Retrieve last activated Wizard Step 
@@ -830,6 +963,13 @@ sap.ui.define([
 				purchOrg = oParticipationModel.getProperty("/Ekorg"),
 				company = oParticipationModel.getProperty("/Bukrs");
 
+			//FIX Selezione dropdown Società
+			if (company)
+				this.getView().byId("companySelect").setSelectedKey(company);
+
+			var oApprover = this.getView().byId("approverItem");
+			oApprover.unbindElement();
+
 			if (purchOrg && company && cluster) {
 				this.getView().setBusy(true);
 				var that = this;
@@ -850,32 +990,36 @@ sap.ui.define([
 						//BEGIN DB - FIX BUG 06/2017: Filtro per Società e Org. Acquisti 
 						//var resp = oRespOData.ClusterCom.results[0].Resp;
 						var resp = '';
+
 						for (var i = 0; i < oRespOData.ClusterCom.results.length; i++) {
 							if ((oRespOData.ClusterCom.results[i].Bukrs === company) && (oRespOData.ClusterCom.results[i].Ekorg === purchOrg))
 								resp = oRespOData.ClusterCom.results[i].Resp;
 						}
-						if (!resp){
-							that.getView().byId("approverItem").setHighlight('Error');
-							that.getView().byId("approverItem").setNumberState('Error');
-							//that.getView().byId("approverItem").setNumber('Error');
-						}
-						else{
-							that.getView().byId("approverItem").setHighlight('None');
-							that.getView().byId("approverItem").setNumberState('None');
+						if (!resp) {
+							//Responsabile approvatore NON definito
+							oApprover.setHighlight('Error');
+							MessageToast.show(that.getTranslation("checkApprover"));
+						} else {
+							//Responsabile approvatore definito
+							oApprover.setHighlight('None');
+							oApprover.setNumberState('None');
+							oApprover.bindElement("oUserModel>/UserSet('" + resp + "')");
 						}
 						//END   DB - FIX BUG 06/2017: Filtro per Società e Org. Acquisti 
 
-						that.getView().byId("approverItem").bindElement("oUserModel>/UserSet('" + resp + "')");
+						//oApprover.bindElement("oUserModel>/UserSet('" + resp + "')");
 						that.getView().setBusy(false);
 					},
 					error: function() {
 						that.getView().setBusy(false);
 					}
 				};
-				this.getView().getModel("oDataModel").read(sPath, mParameters);
+				//	this.getView().getModel("oDataModel").read(sPath, mParameters);
+				that.getView().getModel("oDataModel").read(sPath, mParameters);
 			}
 			this.checkValidationCompleteStep();
-
+			var isBound = that.getView().byId("approverItem").isBound("oUserModel");
+			//console.log("isBound: " + isBound);
 		},
 
 		handleLoadDraft: function() {
@@ -917,6 +1061,10 @@ sap.ui.define([
 					if (oData.results[0].ClusterId !== "") {
 						that.getView().getModel("oDataModel").read("/ClusterSet('" + oData.results[0].ClusterId + "')", {
 							success: function(clusterData) {
+
+								//FIX DB - 03.07.2017: Caricamento società, org. acquisti e approvatore
+								that.onSelectCluster(oData.results[0].ClusterId);
+
 								that.getView().byId("selectedClusterItem").setTitle(clusterData.Name);
 							},
 							error: function(error) {
@@ -1149,6 +1297,36 @@ sap.ui.define([
 					text: "{ControlValues>Description}"
 				})
 			});
+		},
+
+		onSelectFromECC: function(state) {
+			this.getView().byId("supplierIdInput").setEditable(!state);
+		},
+
+		//FIX DB - 03.07.2017
+		onLiveChangeBusinessName: function(oEvent) {
+			var oView = this.getView();
+			var value = oEvent.getParameter("value");
+			//if (oEvent.oSource._sSearchFieldValue === "") {
+			if (!value) {
+				oView.byId("businessNameInput").setValue("");
+				oView.byId("secondBusinessNameInput").setValue("");
+			}
+
+			/*this._dialog.fireSearch({
+				"value": value
+			});*/
+
+			var aFilters = [];
+			aFilters.push(new Filter("Name1", sap.ui.model.FilterOperator.StartsWith, value));
+			aFilters.push(new Filter("SupplierId", sap.ui.model.FilterOperator.EQ, "XXXXXXXXXXXX"));
+			oEvent.getSource().getBinding("items").filter(aFilters, sap.ui.model.FilterType.Application);
+		},
+
+		onBusinessNameHelpClose: function(oEvent) {
+			//var oView = this.getView();
+			//oView.byId("businessNameInput").setValue("");
+			//oView.byId("secondBusinessNameInput").setValue("");
 		}
 	});
 

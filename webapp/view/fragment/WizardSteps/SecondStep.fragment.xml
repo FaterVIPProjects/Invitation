@@ -263,7 +263,8 @@
 						<l:GridData span="L2 M2 S2" />
 					</layoutData>		
 				</Text>
-				<CheckBox selected="{participation>/DoneByFater}"
+				<CheckBox id="cbdonebyfater" selected="{participation>/DoneByFater}"
+				
 					enabled="{= ${utils>/User/Role} !== 'COMMERCIAL_MANAGER'}">
 					<layoutData>
 						<l:GridData span="L2 M2 S2" />
